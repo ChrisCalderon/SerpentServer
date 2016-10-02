@@ -52,5 +52,5 @@ class Connection:
 
             doc = '''Proxy method for '{}' RPC method.'''.format(item)
             proxy.__name__ = item
-            setattr(Connection, item, types.MethodType(proxy, None, Connection))
+            setattr(Connection, item, proxy)
             return getattr(self, item)

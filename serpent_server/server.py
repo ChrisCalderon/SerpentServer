@@ -107,7 +107,7 @@ class JSONRPCHandler(BaseHTTPRequestHandler):
         self.wfile.write(encoded)
 
 
-class ThreadedJSONRPCServer(ThreadingMixIn, HTTPServer):
+class ThreadedServer(ThreadingMixIn, HTTPServer):
     protocol_version = 'HTTP/1.1'
 
     def __init__(self, *args, **kwds):
@@ -120,10 +120,9 @@ class ThreadedJSONRPCServer(ThreadingMixIn, HTTPServer):
             args=(poll_interval,)
         )
         self._serve_forever_thread.start()
-        return self._serve_forever_thread
 
 
-class SecureJSONRPCServer(ThreadedJSONRPCServer):
+class SecureServer(ThreadedServer):
     def __init__(self, certfile: str, keyfile: str, *args, **kwds):
         self._certfile = certfile
         self._keyfile = keyfile
