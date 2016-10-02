@@ -1,0 +1,1 @@
+https://github.com/ethereum/serpent/archive/develop.tar.gz#egg=ethereum-serpent

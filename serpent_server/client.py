@@ -29,6 +29,7 @@ class Connection:
 
     def __getattr__(self, item: str):
         with self._proxy_lock:
+            # proxy might be created while waiting for lock.
             if hasattr(self, item):
                 return getattr(self, item)
 
