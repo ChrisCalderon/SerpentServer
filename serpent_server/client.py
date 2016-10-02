@@ -13,6 +13,7 @@ _hex = codecs.getencoder('hex') # type: Callable[[bytes], Tuple[bytes, int]]
 def _rand() -> str:
     return _hex(os.urandom(4))[0].decode()
 
+__all__ = ['Connection']
 
 class Connection:
     _proxy_lock = threading.Lock()

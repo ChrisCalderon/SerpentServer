@@ -61,7 +61,7 @@ def read_metadata():
                 continue
 
             metadatum_name = relevant_keys.pop(key)
-            metadata[metadatum_name] = line.split('=', 1)[1].strip('\n\' ')
+            metadata[metadatum_name] = line.split('=', 1)[1].strip('\n\'\" ')
 
     if relevant_keys:
         print('FYI; You didn\'t put the following info in your __init__.py:')
@@ -77,5 +77,6 @@ with open('requirements.txt') as reqs:
 metadata = read_metadata()
 metadata['dependency_links'] = links
 metadata['install_requires'] = requirements
+print(metadata)
 
 setup(**metadata)

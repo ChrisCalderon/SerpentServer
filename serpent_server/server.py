@@ -9,6 +9,8 @@ import codecs
 from collections import namedtuple
 from typing import Callable, Tuple
 
+__all__ = ['JSONRPCHandler', 'ThreadedServer', 'SecureServer']
+
 
 RPCError = namedtuple('RPCError', 'json code')
 PARSE_ERROR = RPCError(
