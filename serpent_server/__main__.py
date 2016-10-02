@@ -2,6 +2,7 @@ import argparse
 from . import server
 import os
 import time
+import sys
 
 
 def filepath(p: str) -> str:
@@ -47,7 +48,7 @@ def main():
     parser.add_argument('--serverdir', help='Directory to start server in',
                         type=dirpath)
 
-    args = parser.parse_args() #  type: argparse.Namespace
+    args = parser.parse_args()  # type: argparse.Namespace
     if args.host is None:
         args.host = '127.0.0.1'
 
@@ -75,3 +76,8 @@ def main():
     except KeyboardInterrupt:
         print('server shutdown')
         rpc.shutdown()
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
