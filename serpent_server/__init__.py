@@ -1,6 +1,5 @@
 """A simple JSONRPC API for the Serpent compiler."""
 from .server import *
-from .client import *
 
 __version__ = '0.1'
 __author__ = 'Chris Calderon'
