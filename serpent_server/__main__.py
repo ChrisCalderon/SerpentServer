@@ -1,5 +1,6 @@
 import argparse
-from . import server
+from .server import ThreadedServer, SecureServer
+from .rpc import JSONRPCHandler
 import os
 import time
 import sys
@@ -42,21 +43,23 @@ def main():
                         type=filepath)
     parser.add_argument('--keyfile', help='Private key for HTTPS',
                         type=filepath)
-    parser.add_argument('--host', help='Hostname to bind server to')
+    parser.add_argument('--host', help='Hostname to bind server to',
+                        default='0.0.0.0')
     parser.add_argument('--port', help='Port to bind server to',
                         type=portnum)
     parser.add_argument('--serverdir', help='Directory to start server in',
                         type=dirpath)
 
-    args = parser.parse_args()  # type: argparse.Namespace
+    args = parser.parse_args()
     if args.host is None:
         args.host = '127.0.0.1'
 
     if args.http:
         if args.port is None:
             args.port = 80
-        rpc = server.ThreadedServer((args.host, args.port),
-                                    server.JSONRPCHandler)
+        rpc = ThreadedServer(args.host,
+                             args.port,
+                             JSONRPCHandler)
     else:
         if args.port is None:
             args.port = 443
@@ -64,10 +67,11 @@ def main():
             raise argparse.ArgumentError('certfile required with --https')
         if args.keyfile is None:
             raise argparse.ArgumentError('keyfile required with --https')
-        rpc = server.SecureServer(args.certfile,
-                                  args.keyfile,
-                                  (args.host, args.port),
-                                  server.JSONRPCHandler)
+        rpc = SecureServer(args.certfile,
+                           args.keyfile,
+                           args.host,
+                           args.port,
+                           JSONRPCHandler)
     print('starting server')
     rpc.serve_forever()
     try:
