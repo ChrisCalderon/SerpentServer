@@ -1,4 +1,4 @@
-from http.server import HTTPServer
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 from .redirect import RedirectHandler
 import threading
@@ -10,9 +10,13 @@ __all__ = ['ThreadedServer', 'SecureServer']
 class ThreadedServer(ThreadingMixIn, HTTPServer):
     protocol_version = 'HTTP/1.1'
 
-    def __init__(self, host: str, port: int, *args, **kwds):
+    def __init__(self,
+                 host: str,
+                 port: int,
+                 RequestHandlerClass: BaseHTTPRequestHandler,
+                 bind_and_activate: bool=True):
         self._serve_forever_thread = None  # type: threading.Thread
-        super().__init__((host, port), *args, **kwds)
+        super().__init__((host, port), RequestHandlerClass, bind_and_activate)
 
     def serve_forever(self, poll_interval=0.5):
         self._serve_forever_thread = threading.Thread(
@@ -28,11 +32,15 @@ class SecureServer(ThreadedServer):
                  keyfile: str,
                  host: str,
                  port: int,
-                 *args, **kwds):
+                 RequestHandlerClass: BaseHTTPRequestHandler,
+                 bind_and_activate: bool = True):
         self._certfile = certfile
         self._keyfile = keyfile
-        self._redirect = ThreadedServer(host, 80, RedirectHandler)
-        super().__init__(host, port, *args, **kwds)
+        self._redirect = ThreadedServer(host,
+                                        80,
+                                        RedirectHandler,
+                                        bind_and_activate)
+        super().__init__(host, port, RequestHandlerClass, bind_and_activate)
 
     def server_bind(self):
         super().server_bind()

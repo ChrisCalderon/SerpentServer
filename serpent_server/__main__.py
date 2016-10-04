@@ -32,7 +32,7 @@ def portnum(p: str) -> int:
 
 def main():
     parser = argparse.ArgumentParser(
-        prog='serpentrpc',
+        prog='serpent-rpc',
         description='A JSONRPC server with a serpent compiler API.')
     secure = parser.add_mutually_exclusive_group(required=True)
     secure.add_argument('--http', help='Start an HTTP server.',
@@ -43,8 +43,7 @@ def main():
                         type=filepath)
     parser.add_argument('--keyfile', help='Private key for HTTPS',
                         type=filepath)
-    parser.add_argument('--host', help='Hostname to bind server to',
-                        default='0.0.0.0')
+    parser.add_argument('--host', help='Hostname to bind server to')
     parser.add_argument('--port', help='Port to bind server to',
                         type=portnum)
     parser.add_argument('--serverdir', help='Directory to start server in',

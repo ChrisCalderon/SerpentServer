@@ -8,7 +8,7 @@ class RedirectHandler(BaseHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.headers['HOST'])
         return parsed.netloc + parsed.path
 
-    def _send_error_message(self, code: int) -> bytes:
+    def _send_error_message(self, code: int):
         message, explain = self.responses[code]
         error_message = self.error_message_format % {'code': code,
                                                      'message': message,

@@ -18,7 +18,7 @@ def is_http(req):
 
 
 def split_requirements(links_requirements, req):
-    """Keeps track of requirements that aren't on PyPI."""
+    """Scans through requirements.txt, extracting package info from links."""
     links, requirements = links_requirements
     if is_http(req):
         i = req.find('#egg')
@@ -69,6 +69,22 @@ def read_metadata():
 
     return metadata
 
+
+def locate_scripts():
+    """Finds scripts in the package."""
+    scripts = []
+    bin_dir = os.path.join(os.getcwd(), 'bin')
+    if os.path.isdir(bin_dir):
+        for item in os.listdir(bin_dir):
+            full_path = os.path.join(bin_dir, item)
+            if os.path.isfile(full_path):
+                with open(full_path) as f:
+                    first_line = next(f)
+                    if first_line.startswith('#!'):
+                        scripts.append(full_path)
+    return scripts
+
+
 with open('requirements.txt') as reqs:
     links, requirements = reduce(split_requirements,
                                  filter(None, map(str.strip, reqs)),
@@ -77,6 +93,7 @@ with open('requirements.txt') as reqs:
 metadata = read_metadata()
 metadata['dependency_links'] = links
 metadata['install_requires'] = requirements
+metadata['scripts'] = locate_scripts()
 print(metadata)
 
 setup(**metadata)
